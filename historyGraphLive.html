@@ -21,7 +21,7 @@
       },
       {
           "open": "2022-03-16 16:04:18.329Z",
-          "close": "2022-03-16 17:27:18.926Z"
+          "close": "2022-03-17 12:47:25.814Z"
       },
       
   ]
@@ -111,14 +111,16 @@
                       positiveDate: positiveDate,
                       negativeDate: negativeDate
                   });
-                  console.log("new Date "+ newData[0].positiveDate);
+                  //console.log("new Date "+ newData[0].positiveDate);
               }
               if (negativeDate) {
                   newData.push({
                       status: "close",
                       positiveDate: negativeDate,
-                      negativeDate: dataArr[index + 1] && dataArr[index + 1].open ? moment(dataArr[index + 1].open).format('YYYY-MM-DD H:mm:ss') : null
+                      negativeDate: dataArr[index + 1] && dataArr[index + 1].open ? moment(dataArr[index + 1].open).utc().format('YYYY-MM-DD H:mm:ss') : moment().utc().format('YYYY-MM-DD H:mm:ss')
+                      //negativeDate: dataArr[index + 1] && dataArr[index + 1].open ? dataArr[index + 1].open : null
                   });
+                  //console.log("Negitive Date: " + newData[0].negativeDate)
               }
           });
   
@@ -131,16 +133,22 @@
           newData.map((dataValue) => {
               let startOpenTime = dataValue.positiveDate;
               let endOpenTime = dataValue.negativeDate;
+              console.log("startOpenTime " + startOpenTime)
+              console.log("endOpenTime " + endOpenTime)
+              
               if (startOpenTime && endOpenTime) {
                   let startOpenTimeArray = startOpenTime.split(" ");
                   let endOpenTimeArray = endOpenTime.split(" ");
+                  //console.log("startOpenTimeArray" + startOpenTimeArray)
+                  //console.log("endOpenTimeArray" + endOpenTimeArray)
+                  
                   if (startOpenTimeArray[0] === endOpenTimeArray[0]) {
                       newDataObj.push({
                           status: dataValue.status,
                           startDay: dayFormat.parse(startOpenTimeArray[0] + " 00:00:00"),
                           endDay: dayFormat.parse(endOpenTimeArray[0] + " 24:00:00"),
-                          startTime: timeFormat.parse(startOpenTimeArray[0]),
-                          endTime: timeFormat.parse(endOpenTimeArray[0])
+                          startTime: timeFormat.parse(startOpenTimeArray[1]),
+                          endTime: timeFormat.parse(endOpenTimeArray[1])
                       });
                   } else {
                       newDataObj.push({
